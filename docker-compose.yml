@@ -1,21 +1,23 @@
 services:
-
   django:
-    image: aulas2024tp:0.1
+    image: aulas2024tp:0.3
     build:
       context: ./backend/config/django-image
     volumes:
       - ./backend:/usr/app:delegated
     environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
       - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
     ports:
-      - 8000:8000
+      - "8000:8000"
     networks:
-      red:
+      - red
 
-  db:
+  postgres:
     image: postgres:15
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
@@ -24,18 +26,18 @@ services:
     volumes:
       - ./data/dbdata:/var/lib/postgresql/data:delegated
     ports:
-      - ${DATABASE_PORT}:5432
+      - "${DATABASE_PORT}:5432"
+    networks:
+      red:
 
   admin:
     image: adminer
     environment:
-      ADMINER_DEFAULT_SERVER: host.docker.internal:5432
+      - ADMINER_DEFAULT_SERVER=host.docker.internal:5432
     depends_on:
-      - db
+      - postgres
     ports:
-      - 8080:8080
-    networks:
-      red:
-    
+      - "8080:8080"
+
 networks:
   red:
