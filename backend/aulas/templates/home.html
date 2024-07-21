@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html>
+<head>
+    <title>Aulas 2024</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+</head>
+<body>
+    <h1>Bienvenidos a mi app Aulas 2024</h1>
+    <p>Este proyecto está diseñado para agilizar y gestionar la programación académica y las reservas de aulas de manera eficiente. Desarrollado con Django, presenta un sistema API seguro protegido por autenticación JWT, lo que permite a los administradores y al personal manejar cursos, profesores, aulas y reservas sin problemas. Nuestro objetivo es proporcionar una plataforma intuitiva que mejore la experiencia educativa al simplificar las tareas administrativas. Explore la documentación de la API y el panel de administración para obtener más información sobre las funcionalidades y capacidades de este sistema.</p>
+    <nav>
+        <ul>
+            <li><a href="{% url 'admin:index' %}">Admin Panel</a></li>
+            <li><a href="{% url 'api-root' %}">API Documentation</a></li>
+        </ul>
+    </nav>
+</body>
+</html>

@@ -1,4 +1,15 @@
 services:
+  frontend:
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    command: /bin/sh -c "npm run serve -- --port 3000"
+    networks:
+      - red
+  
   django:
     image: aulas2024tp:0.3
     build:
@@ -38,6 +49,6 @@ services:
       - postgres
     ports:
       - "8080:8080"
-
+    
 networks:
   red:

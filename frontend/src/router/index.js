@@ -1,0 +1,34 @@
+import { createRouter, createWebHistory } from 'vue-router';
+import AulaList from '@/components/AulaList.vue';
+import AulaCRUD from '@/components/AulaCRUD.vue';
+import ProfesorList from '@/components/ProfesorList.vue';
+import ProfesorCRUD from '@/components/ProfesorCRUD.vue';
+import MateriaList from '@/components/MateriaList.vue';
+import MateriaCRUD from '@/components/MateriaCRUD.vue';
+import CarreraList from '@/components/CarreraList.vue';
+import CarreraCRUD from '@/components/CarreraCRUD.vue';
+import LoginPage from '@/components/LoginPage.vue';
+
+
+const routes = [
+  { path: '/', component: LoginPage, name: 'Login', meta: { requiresAuth: true } },
+  { path: '/aulas', component: AulaList, name: 'AulaList' },
+  { path: '/aulas/create', component: AulaCRUD, name: 'CreateAula' },
+  { path: '/aulas/:id/edit', component: AulaCRUD, name: 'EditAula' },
+  { path: '/profesores', component: ProfesorList, name: 'ProfesorList' },
+  { path: '/profesores/create', component: ProfesorCRUD, name: 'CreateProfesor' },
+  { path: '/profesores/:id/edit', component: ProfesorCRUD, name: 'EditProfesor' },
+  { path: '/materias', component: MateriaList, name: 'MateriaList' },
+  { path: '/materias/create', component: MateriaCRUD, name: 'CreateMateria' },
+  { path: '/materias/:id/edit', component: MateriaCRUD, name: 'EditMateria' },
+  { path: '/carreras', component: CarreraList, name: 'CarreraList' },
+  { path: '/materias/create', component: CarreraCRUD, name: 'CreateCarrera' },
+  { path: '/materias/:id/edit', component: CarreraCRUD, name: 'EditCarrera' },
+];
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
+
+export default router;
