@@ -52,8 +52,8 @@ data() {
     dialog: false,
     deleteDialog: false,
     headers: [
-        { text: 'Nombre', value: 'nombre' },
-        { text: 'Acciones', value: 'actions', sortable: false },
+        { title: 'Nombre', value: 'nombre' },
+        { title: 'Acciones', value: 'actions', sortable: false },
     ],
     carreras: [],
     editedItem: {},

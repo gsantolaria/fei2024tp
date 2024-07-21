@@ -22,7 +22,7 @@
           <v-select
             v-model="form.id_carrera"
             :items="carreras"
-            item-text="nombre"
+            item-title="nombre"
             item-value="id"
             label="Carrera"
             :rules="rules.id_carrera"
@@ -31,7 +31,7 @@
           <v-select
             v-model="form.id_profesor"
             :items="profesores"
-            item-text="nombre"
+            item-title="nombre"
             item-value="id"
             label="Profesor"
             :rules="rules.id_profesor"

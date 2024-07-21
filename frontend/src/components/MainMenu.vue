@@ -43,6 +43,7 @@ export default {
         { title: 'Carreras', icon: 'mdi-book-education', to: '/carreras' },
         { title: 'Profesores', icon: 'mdi-account-details', to: '/profesores' },
         { title: 'Materias', icon: 'mdi-book-open-variant', to: '/materias' },
+        { title: 'Reservas', icon: 'mdi-gesture-tap', to: '/reservas' },
       ],
     };
   },

@@ -7,6 +7,8 @@ import MateriaList from '@/components/MateriaList.vue';
 import MateriaCRUD from '@/components/MateriaCRUD.vue';
 import CarreraList from '@/components/CarreraList.vue';
 import CarreraCRUD from '@/components/CarreraCRUD.vue';
+import ReservaAulaCRUD from '@/components/ReservaAulaCRUD.vue';
+import ReservaAulaList from '@/components/ReservaAulaList.vue';
 import LoginPage from '@/components/LoginPage.vue';
 
 
@@ -24,6 +26,9 @@ const routes = [
   { path: '/carreras', component: CarreraList, name: 'CarreraList' },
   { path: '/materias/create', component: CarreraCRUD, name: 'CreateCarrera' },
   { path: '/materias/:id/edit', component: CarreraCRUD, name: 'EditCarrera' },
+  { path: '/reservas', component: ReservaAulaList, name: 'ReservaAulaList' },
+  { path: '/reservas/create', component: ReservaAulaCRUD, name: 'CreateReserva' },
+  { path: '/reservas/:id/edit', component: ReservaAulaCRUD, name: 'EditReserva' },
 ];
 
 const router = createRouter({

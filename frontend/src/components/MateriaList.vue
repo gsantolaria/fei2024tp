@@ -60,11 +60,11 @@ export default {
     const dialog = ref(false);
     const deleteDialog = ref(false);
     const headers = ref([
-      { text: 'Nombre', value: 'nombre' },
-      { text: 'Cantidad de Alumnos', value: 'cant_alumnos' },
-      { text: 'Carrera', value: 'id_carrera' },
-      { text: 'Profesor', value: 'id_profesor' },
-      { text: 'Acciones', value: 'actions', sortable: false },
+      { title: 'Nombre', value: 'nombre' },
+      { title: 'Cantidad de Alumnos', value: 'cant_alumnos' },
+      { title: 'Carrera', value: 'id_carrera' },
+      { title: 'Profesor', value: 'id_profesor' },
+      { title: 'Acciones', value: 'actions', sortable: false },
     ]);
     const materias = ref([]);
     const carreras = ref([]);
