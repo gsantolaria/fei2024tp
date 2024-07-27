@@ -1,12 +1,14 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500px">
+  <v-dialog v-model="showDialog" max-width="400">
     <v-card>
-      <v-card-title class="headline">Confirmar Eliminación</v-card-title>
-      <v-card-text>¿Estás seguro de que deseas eliminar este elemento?</v-card-text>
+      <v-card-title class="headline">Confirmar eliminación</v-card-title>
+      <v-card-text>
+        ¿Estás seguro de que quieres eliminar esta reserva?
+      </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="red darken-1" text @click="confirm">Eliminar</v-btn>
-        <v-btn color="grey" text @click="cancel">Cancelar</v-btn>
+        <v-btn color="red" @click="$emit('confirm')">Eliminar</v-btn>
+        <v-btn @click="$emit('cancel')">Cancelar</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -15,20 +17,23 @@
 <script>
 export default {
   name: 'ConfirmDelete',
-  data() {
-    return {
-      dialog: true,
-    };
+  props: {
+    item: Object,
   },
-  methods: {
-    confirm() {
-      this.$emit('confirm');
-    },
-    cancel() {
-      this.$emit('cancel');
+  computed: {
+    showDialog: {
+      get() {
+        return this.item !== null;
+      },
+      set(value) {
+        if (!value) {
+          this.$emit('cancel');
+        }
+      },
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

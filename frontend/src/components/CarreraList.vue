@@ -4,6 +4,7 @@
     :headers="headers"
     :items="carreras"
     :search="search"
+    :items-per-page="5"
     item-key="id"
     class="elevation-1"
     >
@@ -25,15 +26,15 @@
     </template>
     </v-data-table>
     <CarreraCRUD
-    v-if="dialog"
-    :carrera="editedItem"
-    @refresh="fetchCarreras"
-    @close="dialog = false"
+        v-if="dialog"
+        :carrera="editedItem"
+        @refresh="fetchCarreras"
+        @close="dialog = false"
     />
     <ConfirmDelete
-    v-if="deleteDialog"
-    @confirm="deleteCarrera"
-    @cancel="deleteDialog = false"
+        v-if="deleteDialog"
+        @confirm="deleteCarrera"
+        @cancel="deleteDialog = false"
     />
 </v-container>
 </template>
@@ -52,8 +53,8 @@ data() {
     dialog: false,
     deleteDialog: false,
     headers: [
-        { title: 'Nombre', value: 'nombre' },
-        { title: 'Acciones', value: 'actions', sortable: false },
+        { title: 'Nombre', value: 'nombre', align: 'center' },
+        { title: 'Acciones', value: 'actions', sortable: false, align: 'center' },
     ],
     carreras: [],
     editedItem: {},

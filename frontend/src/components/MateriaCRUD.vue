@@ -2,23 +2,23 @@
   <v-dialog v-model="dialog" max-width="600px" persistent>
     <v-card>
       <v-card-title>
-        <span v-if="form.id">Editar Materia</span>
-        <span v-else>Agregar Materia</span>
+        <span class="headline">{{ form.id ? 'Editar Materia' : 'Nueva Materia' }}</span>
       </v-card-title>
       <v-card-text>
         <v-form ref="form" v-model="valid" @submit.prevent="saveMateria">
-          <v-text-field
-            v-model="form.nombre"
+          <v-text-field 
+            v-model="form.nombre" 
             label="Nombre"
             :rules="rules.nombre"
-            required
-          ></v-text-field>
-          <v-text-field
-            v-model="form.cant_alumnos"
+            required>
+          </v-text-field>
+          <v-text-field 
+            v-model="form.cant_alumnos" 
             label="Cantidad de Alumnos"
+            type="number"
             :rules="rules.cant_alumnos"
-            required
-          ></v-text-field>
+            required>
+          </v-text-field>
           <v-select
             v-model="form.id_carrera"
             :items="carreras"
@@ -26,109 +26,108 @@
             item-value="id"
             label="Carrera"
             :rules="rules.id_carrera"
-            required
-          ></v-select>
+            required>
+          </v-select>
           <v-select
             v-model="form.id_profesor"
-            :items="profesores"
-            item-title="nombre"
+            :items="profesorCompleto"
+            item-title="nombreCompleto"
             item-value="id"
             label="Profesor"
             :rules="rules.id_profesor"
-            required
-          ></v-select>
+            required>
+          </v-select>
         </v-form>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="saveMateria" :disabled="!valid">
+        <v-btn color="primary" text @click="saveMateria" :disabled="!valid">
           Guardar
         </v-btn>
-        <v-btn color="grey" text @click="closeDialog">Cancelar</v-btn>
+        <v-btn color="grey" text @click="$emit('close')">Cancelar</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import { ref, watch, onMounted } from 'vue';
 import axios from 'axios';
 
 export default {
   name: 'MateriaCRUD',
   props: {
-    materia: {
+    selectedItem: {
       type: Object,
       default: () => ({}),
     },
     carreras: {
       type: Array,
-      required: true,
+      default: () => [],
     },
     profesores: {
       type: Array,
-      required: true,
+      default: () => [],
     },
   },
-  setup(props, { emit }) {
-    const dialog = ref(true);
-    const valid = ref(false);
-    const form = ref({ ...props.materia });
-    const rules = {
-      nombre: [(v) => !!v || 'Nombre es requerido'],
-      cant_alumnos: [(v) => !!v || 'Cantidad de alumnos es requerida'],
-      id_carrera: [(v) => !!v || 'Carrera es requerida'],
-      id_profesor: [(v) => !!v || 'Profesor es requerido'],
+  data() {
+    return {
+      valid: false,
+      dialog: true,
+      form: {
+        nombre: '',
+        cant_alumnos: '',
+        id_carrera: null,
+        id_profesor: null,
+      },
+      rules: {
+        nombre: [(v) => !!v || 'El nombre es obligatorio'],
+        cant_alumnos: [(v) => !!v || 'La cantidad de alumnos es obligatoria'],
+        id_carrera: [(v) => !!v || 'La carrera es obligatoria'],
+        id_profesor: [(v) => !!v || 'El profesor es obligatorio'],
+      },
     };
-
-    watch(() => props.materia, (newVal) => {
-      form.value = { ...newVal };
-    });
-
-    const saveMateria = async () => {
-      const materiaData = {
-        id: form.value.id,
-        nombre: form.value.nombre,
-        cant_alumnos: form.value.cant_alumnos,
-        id_carrera: form.value.id_carrera,
-        id_profesor: form.value.id_profesor,
-      };
-
-      if (materiaData.id) {
+  },
+  computed: {
+    profesorCompleto() {
+      return this.profesores.map(profesor => ({
+        ...profesor,
+        nombreCompleto: `${profesor.nombre} ${profesor.apellido}`
+      }));
+    },
+  },
+  methods: {
+    async saveMateria() {
+      if (this.$refs.form.validate()) {
         try {
-          await axios.put(`http://localhost:8000/api/materias/${materiaData.id}/`, materiaData);
-          emit('refresh');
-          closeDialog();
+          if (this.form.id) {
+            await axios.put(`http://localhost:8000/api/materias/${this.form.id}/`, this.form);
+          } else {
+            await axios.post('http://localhost:8000/api/materias/', this.form);
+          }
+          this.$emit('saved');
+          this.$emit('close');
         } catch (error) {
-          console.error('Error updating materia:', error);
-        }
-      } else {
-        try {
-          await axios.post('http://localhost:8000/api/materias/', materiaData);
-          emit('refresh');
-          closeDialog();
-        } catch (error) {
-          console.error('Error creating materia:', error);
+          console.error('Error saving materia:', error);
         }
       }
-    };
-
-    const closeDialog = () => {
-      dialog.value = false;
-    };
-
-    onMounted(() => {
-      dialog.value = true;
-    });
-
-    return {
-      dialog,
-      valid,
-      form,
-      rules,
-      saveMateria,
-      closeDialog,
-    };
+    },
+  },
+  watch: {
+    selectedItem: {
+      handler(newVal) {
+        if (newVal) {
+          this.form = { ...newVal };
+        } else {
+          this.form = {
+            nombre: '',
+            cant_alumnos: '',
+            id_carrera: null,
+            id_profesor: null,
+          };
+        }
+      },
+      immediate: true,
+    },
   },
 };
 </script>

@@ -1,97 +1,92 @@
 <template>
-  <v-form ref="form" v-model="valid" @submit.prevent="submit">
-    <v-card>
-      <v-card-title>{{ isEdit ? 'Editar Aula' : 'Agregar Aula' }}</v-card-title>
-      <v-card-text>
-        <v-text-field v-model="descripcion" label="Descripción" required :rules="descripcionRules"></v-text-field>
-        <v-text-field v-model="ubicacion" label="Ubicación" required :rules="ubicacionRules"></v-text-field>
-        <v-text-field v-model="cant_proyector" label="Cantidad de Proyectores" required></v-text-field>
-        <v-checkbox v-model="es_climatizada" label="¿Es Climatizada?"></v-checkbox>
-        <v-text-field v-model="aforo" label="Aforo" required></v-text-field>
-
-        <v-btn color="primary" @click="submit" :disabled="!valid">Guardar</v-btn>
-        <v-btn color="secondary" @click="cancelar">Cancelar</v-btn>
-      </v-card-text>
-    </v-card>
-  </v-form>
+  <v-card>
+    <v-card-title>
+      <span class="headline">{{ selectedItem ? 'Editar Aula' : 'Nueva Aula' }}</span>
+    </v-card-title>
+    <v-card-text>
+      <v-form ref="form" v-model="valid" @submit.prevent="saveAula">
+        <v-text-field v-model="form.descripcion" label="Nombre" :rules="rules.descripcion" required></v-text-field>
+        <v-text-field v-model="form.aforo" label="Aforo" :rules="rules.aforo" required></v-text-field>
+        <v-text-field v-model="form.ubicacion" label="Ubicacion" :rules="rules.ubicacion" required></v-text-field>
+        <v-text-field v-model="form.cant_proyector" label="Cant Proyectores" :rules="rules.cant_proyector" required></v-text-field>
+        <v-checkbox
+          v-model="form.es_climatizada"
+          label="Es climatizada?"
+        ></v-checkbox>
+      </v-form>
+    </v-card-text>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn color="blue darken-1" text @click="$emit('close')">Cancelar</v-btn>
+      <v-btn color="blue darken-1" text @click="saveAula">Guardar</v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 
 export default {
   name: 'AulaCRUD',
-  setup() {
-    const route = useRoute();
-    const router = useRouter();
-    const valid = ref(false);
-    const descripcion = ref('');
-    const ubicacion = ref('');
-    const cant_proyector = ref('');
-    const es_climatizada = ref(false);
-    const aforo = ref('');
-    const descripcionRules = [v => !!v || 'La descripción es obligatoria'];
-    const ubicacionRules = [v => !!v || 'La ubicación es obligatoria'];
-    const isEdit = ref(false);
-
-    const fetchAula = async (id) => {
-      const response = await axios.get(`http://localhost:8000/api/aulas/${id}/`);
-      const aula = response.data;
-      descripcion.value = aula.descripcion;
-      ubicacion.value = aula.ubicacion;
-      cant_proyector.value = aula.cant_proyector;
-      es_climatizada.value = aula.es_climatizada;
-      aforo.value = aula.aforo;
-      isEdit.value = true;
-    };
-
-    const submit = async () => {
-      const aulaData = {
-        descripcion: descripcion.value,
-        ubicacion: ubicacion.value,
-        cant_proyector: cant_proyector.value,
-        es_climatizada: es_climatizada.value,
-        aforo: aforo.value,
-      };
-      if (isEdit.value) {
-        await axios.put(`http://localhost:8000/api/aulas/${route.params.id}/`, aulaData);
-      } else {
-        await axios.post('http://localhost:8000/api/aulas/', aulaData);
-      }
-      router.push('/aulas');
-    };
-
-    const cancelar = () => {
-      router.push('/aulas');
-    };
-
-    onMounted(() => {
-      if (route.params.id) {
-        fetchAula(route.params.id);
-      }
-    });
-
+  props: {
+    selectedItem: Object,
+  },
+  data() {
     return {
-      valid,
-      descripcion,
-      ubicacion,
-      cant_proyector,
-      es_climatizada,
-      aforo,
-      descripcionRules,
-      ubicacionRules,
-      submit,
-      cancelar,
-      isEdit,
+      form: {
+        descripcion: '',
+        aforo: '',
+        ubicacion: '',
+        cant_proyector: '',
+        es_climatizada: false,
+      },
+      valid: false,
+      rules: {
+        descripcion: [(v) => !!v || 'La descripción es requerida'],
+        aforo: [(v) => !!v || 'El Aforo es requerido'],
+        ubicacion: [(v) => !!v || 'La ubicacion es requerida'],
+        cant_proyector: [(v) => !!v || 'La cantidad de proyectores es requerida'],
+        es_climatizada: [(v) => !!v || 'La informacion sobre calefaccion es requerida'],
+      },
     };
+  },
+  methods: {
+    async saveAula() {
+      if (this.$refs.form.validate()) {
+        try {
+          if (this.selectedItem) {
+            await axios.put(`http://localhost:8000/api/aulas/${this.selectedItem.id}/`, this.form);
+          } else {
+            await axios.post('http://localhost:8000/api/aulas/', this.form);
+          }
+          this.$emit('saved');
+          this.$emit('close');
+        } catch (error) {
+          console.error('Error saving aula:', error);
+        }
+      }
+    },
+  },
+  watch: {
+    selectedItem: {
+      handler(newVal) {
+        if (newVal) {
+          this.form = { ...newVal };
+        } else {
+          this.form = {
+            descripcion: '',
+            aforo: '',
+            ubicacion: '',
+            cant_proyector: '',
+            es_climatizada: false,
+          };
+        }
+      },
+      immediate: true,
+    },
   },
 };
 </script>
 
-<style>
-.v-btn {
-  margin-right: 10px;
-}
+<style scoped>
 </style>

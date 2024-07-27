@@ -9,6 +9,8 @@ import CarreraList from '@/components/CarreraList.vue';
 import CarreraCRUD from '@/components/CarreraCRUD.vue';
 import ReservaAulaCRUD from '@/components/ReservaAulaCRUD.vue';
 import ReservaAulaList from '@/components/ReservaAulaList.vue';
+import HorarioMateriaList from '@/components/HorarioMateriaList.vue';
+import HorarioMateriaCRUD from '@/components/HorarioMateriaCRUD.vue';
 import LoginPage from '@/components/LoginPage.vue';
 
 
@@ -29,6 +31,9 @@ const routes = [
   { path: '/reservas', component: ReservaAulaList, name: 'ReservaAulaList' },
   { path: '/reservas/create', component: ReservaAulaCRUD, name: 'CreateReserva' },
   { path: '/reservas/:id/edit', component: ReservaAulaCRUD, name: 'EditReserva' },
+  { path: '/horarios', component: HorarioMateriaList, name: 'HorarioMateriaList' },
+  { path: '/horarios/create', component: HorarioMateriaCRUD, name: 'CreateHorario' },
+  { path: '/horarios/:id/edit', component: HorarioMateriaCRUD, name: 'EditHorario' },
 ];
 
 const router = createRouter({

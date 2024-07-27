@@ -9,11 +9,11 @@
     >
       <template v-slot:top>
         <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Buscar"
-            class="mx-4"
-          ></v-text-field>
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Buscar"
+          class="mx-4"
+        ></v-text-field>
         <v-toolbar>
           <v-spacer></v-spacer>
           <v-btn color="primary" @click="openDialog">Agregar Materia</v-btn>
@@ -32,10 +32,10 @@
     </v-data-table>
     <MateriaCRUD
       v-if="dialog"
-      :materia="editedItem"
+      :selectedItem="editedItem"
       :carreras="carreras"
       :profesores="profesores"
-      @refresh="fetchMaterias"
+      @saved="fetchMaterias"
       @close="closeDialog"
     />
     <ConfirmDelete
@@ -60,16 +60,16 @@ export default {
     const dialog = ref(false);
     const deleteDialog = ref(false);
     const headers = ref([
-      { title: 'Nombre', value: 'nombre' },
-      { title: 'Cantidad de Alumnos', value: 'cant_alumnos' },
-      { title: 'Carrera', value: 'id_carrera' },
-      { title: 'Profesor', value: 'id_profesor' },
-      { title: 'Acciones', value: 'actions', sortable: false },
+      { title: 'Nombre', value: 'nombre', align: 'center' },
+      { title: 'Cant de Alumnos', value: 'cant_alumnos', align: 'center' },
+      { title: 'Carrera', value: 'id_carrera', align: 'center' },
+      { title: 'Profesor', value: 'id_profesor', align: 'center' },
+      { title: 'Acciones', value: 'actions', sortable: false, align: 'center' },
     ]);
     const materias = ref([]);
     const carreras = ref([]);
     const profesores = ref([]);
-    const editedItem = ref({});
+    const editedItem = ref(null);
     const itemToDelete = ref(null);
 
     const fetchMaterias = async () => {
@@ -167,6 +167,6 @@ export default {
 
 <style scoped>
 .v-text-field {
-    margin-top: 15px;
-  }
+  margin-top: 15px;
+}
 </style>

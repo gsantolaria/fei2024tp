@@ -88,6 +88,6 @@ export default {
   min-width: 400px;
 }
 .v-card-title {
-  color: rgb(12, 106, 193);
+  color: rgb(12, 54, 193);
 }
 </style>

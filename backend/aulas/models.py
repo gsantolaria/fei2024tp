@@ -12,8 +12,8 @@ class Carrera(models.Model):
 class Profesor(models.Model):
     nombre = models.CharField(max_length=128)
     apellido = models.CharField(max_length=128)
-    mostrar = models.CharField(max_length=256)
-    email = models.CharField(max_length=64, null=True)
+    mostrar = models.CharField(max_length=256, blank=True, null=False)
+    email = models.CharField(max_length=64, blank=True, null=False)
 
     def __str__(self):
         return f'{self.nombre} {self.apellido}'

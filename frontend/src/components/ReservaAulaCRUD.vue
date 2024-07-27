@@ -1,7 +1,7 @@
 <template>
 <v-card>
     <v-card-title>
-    <span class="headline">{{ selectedItem ? 'Editar Reserva' : 'Nueva Reserva' }}</span>
+        <span class="headline">{{ selectedItem ? 'Editar Reserva' : 'Nueva Reserva' }}</span>
     </v-card-title>
     <v-card-text>
     <v-form ref="form" v-model="valid" @submit.prevent="saveReserva">
@@ -62,25 +62,35 @@ data() {
 },
 methods: {
     async fetchAulas() {
-    try {
-        const response = await axios.get('http://localhost:8000/api/aulas/');
-        this.aulas = response.data;
-    } catch (error) {
-        console.error('Error fetching aulas:', error);
-    }
+        try {
+            const response = await axios.get('http://localhost:8000/api/aulas/');
+            this.aulas = response.data;
+        } catch (error) {
+            console.error('Error fetching aulas:', error);
+        }
+    },
+    formatDateString(date) {
+      const d = new Date(date);
+      return d.toISOString().slice(0, 19).replace('T', ' ');
     },
     async saveReserva() {
     if (this.$refs.form.validate()) {
         try {
-        if (this.selectedItem) {
-            await axios.put(`http://localhost:8000/api/reservas/${this.selectedItem.id}/`, this.form);
+            const dataFormateada = {
+            ...this.form,
+            fh_desde: this.formatDateString(this.form.fh_desde),
+            fh_hasta: this.formatDateString(this.form.fh_hasta),
+        };
+        if (this.selectedItem ) {
+            console.log(this.selectedItem);
+            await axios.put(`http://localhost:8000/api/reservas/${this.selectedItem.id}/`, dataFormateada);
         } else {
-            await axios.post('http://localhost:8000/api/reservas/', this.form);
+            await axios.post('http://localhost:8000/api/reservas/', dataFormateada);
         }
         this.$emit('saved');
         this.$emit('close');
         } catch (error) {
-        console.error('Error saving reserva:', error);
+            console.error('Error saving reserva:', error);
         }
     }
     },

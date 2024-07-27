@@ -1,23 +1,23 @@
 <template>
   <v-container>
     <v-data-table
-      :headers="headers"  
+      :headers="headers"
       :items="profesores"
       :search="search"
       :items-per-page="5"
       item-value="id"
       class="elevation-1"
     >
-    <template v-slot:top>
+      <template v-slot:top>
         <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Buscar"
-            class="mx-4"
-          ></v-text-field>
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Buscar"
+          class="mx-4"
+        ></v-text-field>
         <v-toolbar>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="openDialog">Agregar profesor</v-btn>
+          <v-btn color="primary" @click="openDialog">Agregar Profesor</v-btn>
         </v-toolbar>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
@@ -28,88 +28,88 @@
         <span>{{ item.profesores.email }}</span>
       </template>
     </v-data-table>
-    <ProfesorCRUD
-    v-if="dialog"
-    :carrera="editedItem"
-    @refresh="fetchProfesores"
-    @close="dialog = false"
-    />
+    <v-dialog v-model="dialog" max-width="600px">
+      <ProfesorCRUD
+        :selectedItem="selectedItem"
+        :dialog="dialog"
+        @saved="fetchProfesores"
+        @close="dialog = false"
+      />
+    </v-dialog>
     <ConfirmDelete
-    v-if="deleteDialog"
-    @confirm="deleteProfesor"
-    @cancel="deleteDialog = false"
+      v-if="deleteDialog"
+      :item="selectedItem"
+      @confirm="deleteProfesor"
+      @cancel="cancelDelete"
     />
   </v-container>
 </template>
 
 <script>
 import axios from 'axios';
-import ConfirmDelete from './ConfirmDelete.vue';
 import ProfesorCRUD from './ProfesorCRUD.vue';
+import ConfirmDelete from './ConfirmDelete.vue';
 
 export default {
-name: 'ProfesorList',
-components: { ProfesorCRUD, ConfirmDelete },
-data() {
+  name: 'ProfesorList',
+  components: { ProfesorCRUD, ConfirmDelete },
+  data() {
     return {
-    search: '',
-    dialog: false,
-    deleteDialog: false,
-    headers: [
-        { text: 'Nombre', value: 'nombre' },
-        { text: 'Apellido', value: 'apellido' },
-        { text: 'Email', value: 'email' },
-        { text: 'Acciones', value: 'actions', sortable: false },
+      dialog: false,
+      deleteDialog: false,
+      profesores: [],
+      selectedItem: null,
+      search: '',
+      headers: [
+        { title: 'Nombre', value: 'nombre', align: 'center' },
+        { title: 'Apellido', value: 'apellido', align: 'center' },
+        { title: 'Correo', value: 'email', align: 'center' },
+        { title: 'Acciones', value: 'actions', sortable: false, align: 'center' },
       ],
-    profesores: [],
-    editedItem: {},
-    itemToDelete: null,
     };
-},
-created() {
-    this.fetchProfesores();
-},
-methods: {
-    fetchProfesores() {
-    axios
-        .get('http://localhost:8000/api/profesores/')
-        .then(response => {
+  },
+  methods: {
+    async fetchProfesores() {
+      try {
+        const response = await axios.get('http://localhost:8000/api/profesores/');
         this.profesores = response.data;
-        })
-        .catch(error => {
+      } catch (error) {
         console.error('Error fetching profesores:', error);
-        });
+      }
     },
     openDialog() {
-        this.editedItem = {};
-        this.dialog = true;
+      this.selectedItem = null;
+      this.dialog = true;
     },
     editProfesor(item) {
-        this.editedItem = { ...item };
-        this.dialog = true;
+      this.selectedItem = item;
+      this.dialog = true;
     },
     confirmDelete(item) {
-        this.itemToDelete = item;
-        this.deleteDialog = true;
+      this.selectedItem = item;
+      this.deleteDialog = true;
     },
-    deleteProfesor() {
-    axios
-        .delete(`http://localhost:8000/api/profesores/${this.itemToDelete.id}/`)
-        .then(() => {
+    async deleteProfesor() {
+      try {
+        await axios.delete(`http://localhost:8000/api/profesores/${this.selectedItem.id}/`);
         this.fetchProfesores();
         this.deleteDialog = false;
-        this.itemToDelete = null;
-        })
-        .catch(error => {
+      } catch (error) {
         console.error('Error deleting profesor:', error);
-        });
+      }
     },
-},
+    cancelDelete() {
+      this.deleteDialog = false;
+    },
+  },
+  created() {
+    this.fetchProfesores();
+  },
 };
 </script>
 
 <style scoped>
 .v-text-field {
-    margin-top: 15px;
-  }
+  margin-top: 15px;
+}
 </style>

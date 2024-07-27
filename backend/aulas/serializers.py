@@ -29,7 +29,7 @@ class ReservaAulaSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReservaAula
         #fields = '__all__'
-        fields = ['id_aula', 'fh_desde', 'fh_hasta', 'observacion']
+        fields = ['id', 'id_aula', 'fh_desde', 'fh_hasta', 'observacion']
 
 class HorarioMateriaSerializer(serializers.ModelSerializer):
     class Meta:
