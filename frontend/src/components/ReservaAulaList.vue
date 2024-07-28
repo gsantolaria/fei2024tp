@@ -114,7 +114,7 @@ export default {
       this.deleteDialog = true;
     },
     async deleteReserva() {
-      console.log(this.selectedItem.id);
+      //console.log(this.selectedItem.id); fallaba y marcaba undefined porque el serializador no devolvia el 'id'.
       axios
         .delete(`http://localhost:8000/api/reservas/${this.selectedItem.id}/`)
         .then(() => {

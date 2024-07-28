@@ -35,4 +35,4 @@ class HorarioMateriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = HorarioMateria
         #fields = '__all__'
-        fields = ['id_materia', 'id_reserva', 'fh_desde', 'fh_hasta']
+        fields = ['id', 'id_materia', 'id_reserva', 'fh_desde', 'fh_hasta']

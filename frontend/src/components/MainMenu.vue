@@ -44,6 +44,7 @@ export default {
         { title: 'Profesores', icon: 'mdi-account-details', to: '/profesores' },
         { title: 'Materias', icon: 'mdi-book-open-variant', to: '/materias' },
         { title: 'Reservas', icon: 'mdi-gesture-tap', to: '/reservas' },
+        { title: 'Horarios', icon: 'mdi-book-clock-outline', to: '/horarios' },
       ],
     };
   },
