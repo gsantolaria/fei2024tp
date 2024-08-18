@@ -19,6 +19,7 @@ export const useAuthStore = defineStore('auth', {
         router.push('/aulas');
       } catch (error) {
         console.error('Login failed:', error);
+        throw error;
       }
     },
     async refreshToken() {

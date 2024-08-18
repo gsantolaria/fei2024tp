@@ -45,21 +45,23 @@ export default {
     const showPassword = ref(false);
     const snackbar = ref(false);
     const snackbarText = ref('');
-    const timeout = 4000;
+    const timeout = 3000;
 
     const usernameRules = [(v) => !!v || 'El usuario es obligatorio'];
     const passwordRules = [(v) => !!v || 'La contraseña es obligatoria'];
 
     const login = async () => {
       try {
+        //console.log("Attempting to log in...");
         await authStore.login({ username: username.value, password: password.value });
       } catch (error) {
-        snackbarText.value = error.response?.status === 401
-          ? 'Credenciales ingresadas incorrectas'
-          : 'Ocurrió un error';
-        snackbar.value = true;
-      }
-    };
+          //console.log("Login failed, entering catch block", error);
+          snackbarText.value = error.response?.status === 401
+            ? 'Credenciales incorrectas'
+            : 'Ocurrió un error';
+          snackbar.value = true;
+    }
+  };
 
     return {
       valid,
